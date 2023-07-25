@@ -58,7 +58,7 @@ function getRandomInt(min, max) {
     return getRandomInt(min, max);
   } else {
     randomValue.push(value);
-    if (randomValue.length > 5) {
+    if (randomValue.length > 10) {
       randomValue.shift();
     }
     return value;
