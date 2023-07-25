@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d8f636cd-3300-406a-af46-4723424b3148" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/js/src/App.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +43,7 @@
       <option name="presentableId" value="Default" />
       <updated>1689667316895</updated>
       <workItem from="1689667318178" duration="2056000" />
+      <workItem from="1690268064386" duration="279000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1689667342485</created>
@@ -66,6 +68,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init" />

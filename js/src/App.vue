@@ -55,7 +55,7 @@ function getRandomInt(min, max) {
   const _max = Math.floor(max);
   const value = Math.floor(Math.random() * (_max - _min + 1)) + _min; // 含最大值和最小值
   if (randomValue.includes(value)) {
-    getRandomInt(min, max);
+    return getRandomInt(min, max);
   } else {
     randomValue.push(value);
     if (randomValue.length > 5) {
