@@ -30,7 +30,6 @@ const launch = async () => {
 
 <style scoped>
 .wrap{
-  width: 80vw;
   min-height: 100vh;
   position: relative;
 }

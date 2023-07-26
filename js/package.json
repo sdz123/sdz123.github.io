@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node bin.js",
     "preview": "vite preview"
   },
   "dependencies": {
+    "fs-extra": "^11.1.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"
   },

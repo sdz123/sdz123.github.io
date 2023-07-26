@@ -4,8 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8f636cd-3300-406a-af46-4723424b3148" name="Changes" comment="fix nan bug">
-      <change beforePath="$PROJECT_DIR$/js/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/js/src/App.vue" afterDir="false" />
+    <list default="true" id="d8f636cd-3300-406a-af46-4723424b3148" name="Changes" comment="fix assets forgot">
+      <change afterPath="$PROJECT_DIR$/js/bin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/js/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/js/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/src/pages/chat.vue" beforeDir="false" afterPath="$PROJECT_DIR$/js/src/pages/chat.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +48,7 @@
       <updated>1689667316895</updated>
       <workItem from="1689667318178" duration="2056000" />
       <workItem from="1690268064386" duration="279000" />
+      <workItem from="1690357313479" duration="133000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1689667342485</created>
