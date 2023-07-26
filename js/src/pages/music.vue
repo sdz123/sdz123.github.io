@@ -47,31 +47,21 @@ button {
 }
 </style>
 <script setup>
-import { ref, computed } from "vue";
-import { music } from "@/constants/music";
-
-function getRandomInt(min, max) {
-  const _min = Math.ceil(min);
-  const _max = Math.floor(max);
-  const value = Math.floor(Math.random() * (_max - _min + 1)) + _min; // 含最大值和最小值
-  if (randomValue.includes(value)) {
-    return getRandomInt(min, max);
-  } else {
-    randomValue.push(value);
-    if (randomValue.length > 10) {
-      randomValue.shift();
-    }
-    return value;
-  }
-}
-
+import { ref, computed ,onMounted } from "vue";
+import { random,getMusicList } from '@/util.js';
+const getRandomInt = random();
+let music;
 let curPlay = ref(0);
 let curPlaySrc = computed(() => music[curPlay.value]);
 let playStates = ref(1); // 1 停止 2 暂停 3 播放
 let playMode = ref(0); // 0 列表循环 1 随机播放 2 单曲循环
-const randomValue = []; // 防止随机播放老是随机到之前的音乐;
 const audio = new Audio();
-audio.autoplay = true;
+onMounted(async ()=>{
+  music = await getMusicList();
+  changePlayMode()
+  audio.autoplay = true;
+})
+
 audio.stop = function () {
   audio.currentTime = 0;
   audio.pause();

@@ -1,22 +1,42 @@
 <template>
-  <input type="text" v-model="question">
-  <div v-for="(answer,i) in resultList" :key="i">{{answer}}</div>
-  <button @click="getAnswer" @keydown.enter="getAnswer">咨询</button>
+  <div class="wrap">
+    <div class="top">
+      <input type="text" v-model="question"  @keyup.enter="launch"> <button @click="launch">咨询</button>    <div v-if="isPending">正在询问中...</div>
+    </div>
+    <div class="result">
+      <div v-for="(answer,i) in resultList" :key="i">
+        <br/>
+        {{answer}}
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script setup>
 import {ref,reactive} from 'vue';
+import {getAnswer} from "@/util.js"
 const question = ref('');
 const resultList = reactive([]);
-import axios from 'axios';
-const getAnswer = async () => {
-    const result = await axios.get(`https://m-server.azurewebsites.net/getAnswer/${question.value}`);
-    resultList.push(result.data);
-
+const isPending = ref(false);
+const launch = async () => {
+  isPending.value = true;
+  resultList.push(await getAnswer(question.value));
+  isPending.value = false;
 }
+
 
 </script>
 
 <style scoped>
-
+.wrap{
+  width: 80vw;
+  min-height: 100vh;
+  position: relative;
+}
+.top{
+  position: sticky;
+  top: 10px;
+  background: white;
+}
 </style>
