@@ -48,17 +48,15 @@ button {
 </style>
 <script setup>
 import { ref, computed ,onMounted } from "vue";
-import { random,getMusicList } from '@/util.js';
+import { random } from '@/util.js';
 const getRandomInt = random();
-let music;
+import music from '../m'
 let curPlay = ref(0);
 let curPlaySrc = computed(() => music[curPlay.value]);
 let playStates = ref(1); // 1 停止 2 暂停 3 播放
 let playMode = ref(0); // 0 列表循环 1 随机播放 2 单曲循环
 const audio = new Audio();
 onMounted(async ()=>{
-  music = await getMusicList();
-  changePlayMode()
   audio.autoplay = true;
 })
 
