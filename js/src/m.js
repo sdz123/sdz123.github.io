@@ -13,5 +13,6 @@ export default [
     "https://res.cloudinary.com/dk1dkencm/video/upload/v1687334524/music/mrbowliiv7ybkuksjoty.mp3",
     "https://res.cloudinary.com/dk1dkencm/video/upload/v1687334518/music/pedexs1w7tuf2adxtnxr.mp3",
     "https://res.cloudinary.com/dk1dkencm/video/upload/v1687334515/music/pj9xwgxfekhsouv2rlfp.mp3",
-    "https://res.cloudinary.com/dk1dkencm/video/upload/v1687334514/music/omqufhl8vyctzsy5u9gq.mp3"
+    "https://res.cloudinary.com/dk1dkencm/video/upload/v1687334514/music/omqufhl8vyctzsy5u9gq.mp3",
+    "https://res.cloudinary.com/dk1dkencm/video/upload/v1692080345/music/xqcqluwp9cgalbupztlo.mp3"
 ]
