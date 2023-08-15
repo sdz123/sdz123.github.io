@@ -1,15 +1,15 @@
-import axios from 'axios';
-const instance = axios.create({
-    baseURL: 'https://m-server.azurewebsites.net',
-});
+// import axios from 'axios';
+// const instance = axios.create({
+//     baseURL: 'https://m-server.azurewebsites.net',
+// });
 export const getAnswer = async (question) => {
-    const result = await instance.get(`/getAnswer/${question}`);
-    return result.data;
+    // const result = await instance.get(`/getAnswer/${question}`);
+    // return result.data;
 }
-export const getMusicList = async () => {
-    const result = await instance.get(`/getMusicList`);
-    return result.data;
-}
+// export const getMusicList = async () => {
+//     const result = await instance.get(`/getMusicList`);
+//     return result.data;
+// }
 export const random = () => {
     const randomValue = [];
     const getRandomInt = (min, max) => {
