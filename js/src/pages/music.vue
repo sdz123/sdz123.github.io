@@ -24,7 +24,7 @@
       }}
     </button>
     <br />
-    <button @click="play">再听一遍</button>
+    <button @click="play">再听1遍</button>
     <br />
     <button @click="audio.stop">停止播放</button>
   </div>
