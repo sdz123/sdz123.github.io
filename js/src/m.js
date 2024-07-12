@@ -13,4 +13,6 @@ export default [
     "https://res.cloudinary.com/dk1dkencm/video/upload/v1687334515/music/pj9xwgxfekhsouv2rlfp.mp3",//通俗易懂diss
     "https://res.cloudinary.com/dk1dkencm/video/upload/v1687334514/music/omqufhl8vyctzsy5u9gq.mp3",// 崂山道士
     "https://res.cloudinary.com/dk1dkencm/video/upload/v1692080345/music/xqcqluwp9cgalbupztlo.mp3",// 从什么时候开始 秋刀鱼会过期。。
+   "https://res.cloudinary.com/dk1dkencm/video/upload/v1720754960/music/gyj2scl3txqwhkpdniaw.mp3",// 北派
+   "https://res.cloudinary.com/dk1dkencm/video/upload/v1720754961/music/kvby36tx9szst58bab4n.mp3" // 工厂
 ]
