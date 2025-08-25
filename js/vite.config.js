@@ -7,9 +7,10 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  server:{
-    host:"192.168.22.55",
-    port:"9527"
+  server: {
+    host: true,
+    port: 9527,
+    // 如果需要：
   },
   resolve: {
     alias: {
