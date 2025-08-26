@@ -111,6 +111,7 @@ function openDrawer(view){
   display:flex;
   flex-direction:column;
   gap:10px;                           /* 进度 与 控件 的间距 */
+  justify-content: space-between;
 }
 
 @media (max-width:560px){
