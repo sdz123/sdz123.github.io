@@ -1,7 +1,6 @@
 <template>
   <div class="player-bg">
     <div class="player-card">
-      <!-- 顶部：状态（可点击） + 标题 -->
       <PlayerHeader
           :state-class="stateClass"
           :status-bar-text="statusBarText"
@@ -9,19 +8,12 @@
           @open-drawer="openDrawer('lists')"
       />
 
-      <!-- 中部：左=封面；右=进度条 + 控制 -->
       <div class="center">
         <div class="cover"><div class="disc"></div></div>
 
         <div class="right-col">
-          <!-- 进度（现在放在 controls 上面） -->
-          <ProgressBar
-              :duration="duration"
-              :current-time="currentTime"
-              @seek="onSeek"
-          />
+          <ProgressBar :duration="duration" :current-time="currentTime" @seek="onSeek" />
 
-          <!-- 控制区：左（模式图标）、中（上一/播停/下一）、右（当前歌单曲目） -->
           <PlayerControls
               :play-states="playStates"
               :play-btn-aria="playBtnAria"
@@ -36,7 +28,6 @@
       </div>
     </div>
 
-    <!-- 底部 Drawer：支持 lists / tracks 两种初始视图 -->
     <PlaylistDrawer
         :open="drawerOpen"
         :lists="safePlaylists"
@@ -60,7 +51,7 @@ import ProgressBar    from "@/components/player/ProgressBar.vue";
 import PlaylistDrawer from "@/components/player/PlaylistDrawer.vue";
 
 const drawerOpen = ref(false);
-const drawerInitialView = ref('lists'); // 'lists' | 'tracks'
+const drawerInitialView = ref('lists');
 const drawerInitialListIndex = ref(0);
 
 const {
@@ -73,26 +64,30 @@ const {
 } = useAudioPlayer();
 
 function openDrawer(view){
-  drawerInitialView.value = view;                  // 'lists' 或 'tracks'
-  drawerInitialListIndex.value = curListIndex.value; // 用当前歌单
+  drawerInitialView.value = view;
+  drawerInitialListIndex.value = curListIndex.value;
   drawerOpen.value = true;
 }
 </script>
 
 <style scoped>
+/* ====== 布局容器 ====== */
 .player-bg{
   min-height:100vh;
-  display:flex; align-items:center; justify-content:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   background:
       radial-gradient(1200px 600px at 20% 10%, #e0f2ff 0%, transparent 50%),
       radial-gradient(1200px 600px at 80% 90%, #fde2ff 0%, transparent 50%),
       linear-gradient(135deg, #f6f9fc, #eef2f7);
   padding:20px;
-  overflow-x:hidden; /* 防横向滚动条 */
-  box-sizing: border-box;
+  overflow-x:hidden;
+  box-sizing:border-box; /* ✅ 你提到的修复：携带 */
 }
+
 .player-card{
-  width: min(720px, 92vw);            /* 稍窄一点 */
+  width: min(720px, 92vw);
   border-radius:20px;
   padding:18px 18px 16px;
   backdrop-filter: blur(12px);
@@ -100,26 +95,41 @@ function openDrawer(view){
   box-shadow: 0 10px 30px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.6);
 }
 
-/* 中部布局：右列包含 进度条 + 控件 */
+/* ====== 中部：左=封面；右=进度+控制 ====== */
 .center{
   display:grid;
-  grid-template-columns: 150px 1fr;   /* 略收紧 */
+  grid-template-columns: 150px 1fr;
   gap:16px;
   margin-top:14px;
 }
 .right-col{
   display:flex;
   flex-direction:column;
-  gap:10px;                           /* 进度 与 控件 的间距 */
-  justify-content: space-between;
+  gap:10px;
+  justify-content: space-between; /* ✅ 保留你的设置 */
 }
 
+/* ====== 移动端：顶部 1/4 屏，不再垂直居中 ====== */
 @media (max-width:560px){
-  .player-card{ width: min(460px, 94vw); padding:14px; border-radius:16px; }
-  .center{ grid-template-columns: 1fr; gap:12px; }
+  .player-bg{
+    align-items:flex-start;   /* 顶部对齐 */
+    justify-content:center;   /* 水平居中 */
+    padding-top:5vh;         /* ✅ 顶部距离为屏幕高度的 1/4 */
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .player-card{
+    width: min(460px, 94vw);
+    padding:14px;
+    border-radius:16px;
+  }
+  .center{
+    grid-template-columns: 1fr;
+    gap:12px;
+  }
 }
 
-/* 封面 */
+/* ====== 封面 ====== */
 .cover{
   display:flex; align-items:center; justify-content:center;
   aspect-ratio:1/1; border-radius:16px;
@@ -135,7 +145,8 @@ function openDrawer(view){
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 
-<!-- 全局：移除横向滚动条的兜底 -->
+<!-- 防止偶发横向滚动条 -->
 <style>
 html, body { margin:0; overflow-x:hidden; }
 </style>
+

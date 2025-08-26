@@ -1,10 +1,9 @@
 // src/composables/useAudioPlayer.js
 import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import { random } from "@/util.js";
-import rawPlaylists from "@/playLists.js"; // 你的数据文件
+import rawPlaylists from "@/playLists.js";
 
 export function useAudioPlayer() {
-    // ——— 歌单兜底清洗 ———
     const fallbackPlaylists = [{ id: "default", name: "全部歌曲", cover: "", tracks: [] }];
     const safePlaylists = computed(() => {
         return Array.isArray(rawPlaylists) && rawPlaylists.length
@@ -17,7 +16,6 @@ export function useAudioPlayer() {
             : fallbackPlaylists;
     });
 
-    // ——— 播放器状态（已移除音量） ———
     const audio = new Audio();
     audio.preload = "metadata";
 
@@ -55,7 +53,6 @@ export function useAudioPlayer() {
     };
     const trackTitleFull = computed(() => curTrack.value?.title?.trim?.() || trackTitleFromUrl(curPlaySrc.value));
 
-    // status 展示（歌单名 + 第N/M首）
     const statusBarText = computed(() => {
         const name  = currentPlaylist.value?.name || "歌单";
         const total = tracks.value.length || 0;
@@ -70,10 +67,9 @@ export function useAudioPlayer() {
     }));
     const playBtnAria = computed(() => playStates.value === 3 ? "暂停" : "播放");
 
-    // 生命周期
     onMounted(() => {
         audio.autoplay = true;
-        audio.volume   = 1.0; // 固定音量（已无调节功能）
+        audio.volume   = 1.0;
 
         audio.addEventListener("loadedmetadata", onMeta);
         audio.addEventListener("timeupdate", onTick);
@@ -87,7 +83,6 @@ export function useAudioPlayer() {
         audio.removeEventListener("ended", onEnded);
     });
 
-    // 持久化
     watch(curListIndex, (v) => {
         localStorage.setItem("curListIndex", String(v));
         curTrackIndex.value = 0;
@@ -96,11 +91,9 @@ export function useAudioPlayer() {
     });
     watch(curTrackIndex, (v) => localStorage.setItem("curTrackIndex", String(v)));
 
-    // 控制（已移除外露的 stop；在 play 内部做重置）
     function resume() { audio.play(); playStates.value = 3; }
     function play() {
         if (!curPlaySrc.value) return;
-        // 内部重置：替代原 audio.stop()
         try { audio.pause(); } catch {}
         audio.currentTime = 0;
         audio.src = curPlaySrc.value;
@@ -114,14 +107,13 @@ export function useAudioPlayer() {
         else resume();
     }
 
-    function setMode(mode) { playMode.value = mode; }
     const getRandomInt = random();
+    // ✅ 改动：切换模式时不再改变当前曲目或触发播放
     function changePlayMode() {
         playMode.value = playMode.value + 1 > 2 ? 0 : playMode.value + 1;
-        if (playMode.value === 1 && playStates.value !== 3 && tracks.value.length) {
-            curTrackIndex.value = getRandomInt(0, tracks.value.length - 1);
-        }
+        // 不修改 curTrackIndex，不调用 play()
     }
+    function setMode(mode) { playMode.value = mode; }
 
     function next() {
         const total = tracks.value.length;
@@ -137,19 +129,17 @@ export function useAudioPlayer() {
         play();
     }
 
-    // 防止切换到空歌单
     function switchPlaylist(i) {
         if (!Number.isInteger(i)) return;
         const lists = safePlaylists.value;
         const max = Math.max(0, lists.length - 1);
         const nextIdx = Math.min(Math.max(0, i), max);
         const nextTracksLen = Array.isArray(lists[nextIdx]?.tracks) ? lists[nextIdx].tracks.length : 0;
-        if (nextTracksLen <= 0) return; // 空歌单：不切换
+        if (nextTracksLen <= 0) return;
         if (nextIdx === curListIndex.value) return;
         curListIndex.value = nextIdx;
     }
 
-    // 指定歌单+曲目播放（也校验空歌单）
     function playIn(listIndex, trackIndex) {
         const lists = safePlaylists.value;
         const li = Math.min(Math.max(0, listIndex), Math.max(0, lists.length - 1));
@@ -161,7 +151,6 @@ export function useAudioPlayer() {
         play();
     }
 
-    // 事件
     function onEnded() {
         const total = tracks.value.length;
         if (!total) return;
@@ -172,11 +161,9 @@ export function useAudioPlayer() {
     function onMeta() { duration.value = audio.duration || 0; }
     function onTick() { currentTime.value = audio.currentTime || 0; }
 
-    // 进度（已移除 onVolume）
     function onSeek(v) { audio.currentTime = Number(v || 0); }
 
     return {
-        // 数据
         safePlaylists, currentPlaylist, tracks, curTrack,
         curListIndex, curTrackIndex,
         audio, duration, currentTime,
@@ -184,7 +171,6 @@ export function useAudioPlayer() {
         curPlaySrc, trackTitleFull, trackTitleFromUrl,
         statusBarText, stateClass, playBtnAria,
 
-        // 方法
         play, pause, resume, changePlayState, next, prev, setMode, changePlayMode,
         switchPlaylist, playIn, onSeek
     };

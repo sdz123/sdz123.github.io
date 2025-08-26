@@ -1,6 +1,6 @@
 <template>
   <div class="controls">
-    <!-- 左侧：播放模式切换（本地 svg 替换） -->
+    <!-- 左侧：播放模式切换（本地 svg） -->
     <button
         class="icon-btn small"
         :title="modeTitle"
@@ -28,14 +28,14 @@
       </button>
     </div>
 
-    <!-- 右侧：打开当前歌单曲目 -->
+    <!-- 右侧：打开当前歌单曲目（保持内联 svg，做绝对居中处理） -->
     <button
         class="icon-btn small"
         title="查看当前歌单曲目"
         aria-label="查看当前歌单曲目"
         @click="$emit('open-current-tracks')"
     >
-      <svg viewBox="0 0 24 24" aria-hidden="true">
+      <svg class="ico-svg" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M3 6h14v2H3V6zm0 5h14v2H3v-2zm0 5h9v2H3v-2zM18 6h3v11a3 3 0 1 1-2-2.83V6z"/>
       </svg>
     </button>
@@ -69,23 +69,29 @@ const modeTitle = computed(() =>
 .center-controls{
   display:flex; align-items:center; justify-content:center; gap:12px;
 }
+
+/* 按钮容器 */
 .icon-btn, .play-btn{
   border:none; outline:none; background:#fff; border-radius:999px;
   box-shadow: 0 10px 20px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.6);
-  display:grid; place-items:center;
+  display:grid; place-items:center;        /* 居中容器 */
   transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
   cursor:pointer;
 }
-.icon-btn{ width:48px; height:48px; }
+.icon-btn{ width:48px; height:48px;display: flex; align-items: center; justify-content: center; }
 .icon-btn.small{ width:40px; height:40px; }
 .play-btn{ width:70px; height:70px; }
 .icon-btn:hover, .play-btn:hover{ transform: translateY(-1px); }
 .icon-btn:active, .play-btn:active{ transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,.14); }
+
+/* ✅ 图标绝对居中：无论 img 还是 svg */
+.icon-btn > *{ display:block; margin:auto; }
+.ico{ width:24px; height:24px; object-fit:contain; }
+.ico-svg{ width:24px; height:24px; }
+
+/* 中间播放按钮里的 svg 尺寸 */
 .icon-btn svg, .play-btn svg{ width:26px; height:26px; fill:#222; }
 .play-btn svg{ width:32px; height:32px; }
-
-/* 播放模式图标尺寸 */
-.ico{ width:24px; height:24px; }
 
 @media (max-width:560px){
   .controls{ grid-template-columns: 42px 1fr 42px; gap:8px; }
@@ -94,6 +100,6 @@ const modeTitle = computed(() =>
   .play-btn{ width:62px; height:62px; }
   .icon-btn svg, .play-btn svg{ width:22px; height:22px; }
   .play-btn svg{ width:28px; height:28px; }
-  .ico{ width:20px; height:20px; }
+  .ico, .ico-svg{ width:20px; height:20px; }
 }
 </style>
