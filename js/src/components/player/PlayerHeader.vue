@@ -1,8 +1,8 @@
 <template>
   <div class="header">
-    <div class="status" :class="stateClass" :title="stateLabel">
-      {{ stateLabelShort }}
-    </div>
+    <button class="status as-btn" :class="stateClass" :title="statusBarText" @click="$emit('open-drawer')">
+      {{ statusBarText }}
+    </button>
     <div class="title" :title="trackTitleFull">
       {{ trackTitleFull }}
     </div>
@@ -11,25 +11,24 @@
 
 <script setup>
 defineProps({
-  stateClass: { type: Object, required: true },
-  stateLabel: { type: String, required: true },
-  stateLabelShort: { type: String, required: true },
+  stateClass:     { type: Object, required: true },
+  statusBarText:  { type: String, required: true },
   trackTitleFull: { type: String, required: true }
 });
+defineEmits(['open-drawer']);
 </script>
 
 <style scoped>
 .header{
-  display:grid;
-  grid-template-columns: auto 1fr;
-  align-items:center; gap:12px;
+  display:grid; grid-template-columns:auto 1fr; align-items:center; gap:12px;
 }
 .status{
-  font-size: 12px; letter-spacing:.2px; padding: 6px 10px;
-  border-radius: 999px; background: rgba(0,0,0,.06);
-  user-select:none; white-space: nowrap; max-width: 38vw;
-  overflow: hidden; text-overflow: ellipsis;
+  font-size:12px; letter-spacing:.2px; padding:6px 10px;
+  border-radius:999px; background:rgba(0,0,0,.06);
+  user-select:none; white-space:nowrap; max-width:46vw; overflow:hidden; text-overflow:ellipsis;
 }
+.as-btn{ border:none; cursor:pointer; transition: transform .05s ease, background .15s ease; }
+.as-btn:hover{ transform: translateY(-1px); }
 .status.playing{ color:#0a7; background: rgba(0,170,119,.12); }
 .status.paused{ color:#b8860b; background: rgba(184,134,11,.12); }
 .status.stopped{ color:#666; }
@@ -37,5 +36,5 @@ defineProps({
   margin-left:auto; font-weight:600; font-size:16px; color:#222;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-@media (max-width:520px){ .status{ max-width:30vw; } }
+@media (max-width:520px){ .status{ max-width: 60vw; } }
 </style>
