@@ -1,14 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>stone</title>
-    <script type="module" crossorigin src="/assets/index-c79f2ca2.js"></script>
-    <link rel="stylesheet" href="/assets/index-abe4122d.css">
+    <meta charset="utf-8" />
+    <title>项目测试</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style>
+      html,
+      body,
+      #container {
+        height: 100%;
+        margin: 0;
+      }
+      .legend {
+        position: fixed;
+        left: 12px;
+        top: 12px;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.65);
+        color: #fff;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font: 12px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      }
+      #btnLocate {
+        position: fixed;
+        right: 20px;
+        bottom: 30px;
+        z-index: 99999; /* 提升层级，保证在地图上方 */
+        padding: 10px 16px;
+        font-size: 14px;
+        background-color: #0a58ca;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+      }
+      #btnLocate:hover {
+        background-color: #084298;
+      }
+    </style>
+    <!-- 替换为你的 AK；务必通过 http(s) 服务器访问 -->
+    <script src="https://api.map.baidu.com/api?type=webgl&v=1.0&ak=JRBMtz9trmL3Eu32WqTCDP856L5lt2ux"></script>
   </head>
   <body>
-    <div id="app"></div>
-    
+    <div id="container"></div>
+    <button id="btnLocate">定位到我的位置</button>
+    <div class="legend">
+      <b style="color: red">Mattercraft项目测试</b><br />
+    </div>
+    <!-- 新增：定位按钮 -->
+
+    <script>
+      const indoorInitOnceByUid = new Set();
+      const map = new BMapGL.Map("container", {
+        showControls: true,
+        enableIconClick: true,
+        displayOptions: { indoor: true },
+      });
+      map.enableScrollWheelZoom(true);
+
+      const geocoder = new BMapGL.Geocoder();
+      geocoder.getPoint(
+        "中国国际贸易中心",
+        function (pt) {
+          if (!pt) {
+            alert("未解析到“中国国际贸易中心”");
+            return;
+          }
+          map.centerAndZoom(pt, 19);
+        },
+        "北京市"
+      );
+
+      let hotelsAdded = false;
+      map.addEventListener("indoor_status_changed", function (e) {
+        if (!e || !e.uid) return;
+        if (indoorInitOnceByUid.has(e.uid)) return;
+        indoorInitOnceByUid.add(e.uid);
+
+        const infos = map.getIndoorInfo && map.getIndoorInfo();
+        const info = infos && infos[e.uid];
+        if (!info) return;
+
+        map.setMinZoom(18);
+
+        const [lng1, lat1] = map.mercatorToLnglat(
+          info.boundsMin[0],
+          info.boundsMin[1]
+        );
+        const [lng2, lat2] = map.mercatorToLnglat(
+          info.boundsMax[0],
+          info.boundsMax[1]
+        );
+        const minLng = Math.min(lng1, lng2),
+          maxLng = Math.max(lng1, lng2);
+        const minLat = Math.min(lat1, lat2),
+          maxLat = Math.max(lat1, lat2);
+
+        let preferFloorName = null;
+        let defaultFloorName = null;
+        if (info.floors) {
+          for (const k in info.floors) {
+            const f = info.floors[k];
+            if (!f) continue;
+            if (!defaultFloorName && String(k) === String(info.defaultFloor)) {
+              defaultFloorName = f.floorName;
+            }
+            if (f.floorName === "B1") {
+              preferFloorName = "B1";
+            }
+          }
+        }
+        const targetFloor = preferFloorName || defaultFloorName;
+        if (targetFloor) {
+          setTimeout(() => {
+            map.showIndoor(info.uid, targetFloor);
+          }, 0);
+        }
+
+        const names = [
+          "国贸酒店A（B1）",
+          "国贸酒店B（B1）",
+          "国贸酒店C（B1）",
+          "国贸酒店D（B1）",
+        ];
+        for (let i = 0; i < 4; i++) {
+          const lng = minLng + Math.random() * (maxLng - minLng);
+          const lat = minLat + Math.random() * (maxLat - minLat);
+          const pt = new BMapGL.Point(lng, lat);
+          const marker = new BMapGL.Marker(pt);
+          map.addOverlay(marker);
+          const label = new BMapGL.Label(names[i], {
+            position: pt,
+            offset: new BMapGL.Size(10, -20),
+          });
+          label.setStyle({
+            color: "#111",
+            backgroundColor: "#fff",
+            border: "1px solid #ddd",
+            padding: "2px 6px",
+            borderRadius: "4px",
+          });
+          map.addOverlay(label);
+        }
+      });
+
+      // 实时定位
+      const geo = new BMapGL.Geolocation();
+      let meMarker = null,
+        meLabel = null,
+        lastPoint = null;
+
+      function updateMyLocation() {
+        geo.getCurrentPosition(
+          function (r) {
+            if (
+              this.getStatus &&
+              this.getStatus() === BMAP_STATUS_SUCCESS &&
+              r &&
+              r.point
+            ) {
+              lastPoint = r.point;
+              if (!meMarker) {
+                meMarker = new BMapGL.Marker(r.point, {
+                  enableDragging: false,
+                });
+                meLabel = new BMapGL.Label("我的位置", {
+                  position: r.point,
+                  offset: new BMapGL.Size(10, -20),
+                });
+                meLabel.setStyle({
+                  color: "#0a58ca",
+                  backgroundColor: "#eef4ff",
+                  border: "1px solid #bcd",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                });
+                map.addOverlay(meMarker);
+                map.addOverlay(meLabel);
+              } else {
+                meMarker.setPosition(r.point);
+                meLabel.setPosition(r.point);
+              }
+            }
+          },
+          { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+        );
+      }
+
+      // 每 3 秒取一次当前位置
+      updateMyLocation();
+      const timer = setInterval(updateMyLocation, 3000);
+      window.addEventListener("beforeunload", () => clearInterval(timer));
+
+      // 点击按钮时：如果已经有定位，就把地图移到定位点
+      document
+        .getElementById("btnLocate")
+        .addEventListener("click", function () {
+          if (lastPoint) {
+            map.panTo(lastPoint);
+          } else {
+            alert("定位中，请稍后重试…");
+          }
+        });
+    </script>
   </body>
 </html>
