@@ -121,18 +121,34 @@
         }
 
         const names = [
-          "国贸酒店A（B1）",
-          "国贸酒店B（B1）",
-          "国贸酒店C（B1）",
-          "国贸酒店D（B1）",
+          {
+            name: "China World Summit Wing Hotel",
+            wgsLng: 116.464968,
+            wgsLat: 39.917925,
+          },
+          {
+            name: "Kerry Hotel Beijing",
+            wgsLng: 116.464788,
+            wgsLat: 39.919673,
+          },
+          {
+            name: "JEN Hotel Beijing",
+            wgsLng: 116.467245,
+            wgsLat: 39.91851,
+          },
+          {
+            name: "China World Hotel",
+            wgsLng: 116.465733,
+            wgsLat: 39.915819,
+          },
         ];
+
         for (let i = 0; i < 4; i++) {
-          const lng = minLng + Math.random() * (maxLng - minLng);
-          const lat = minLat + Math.random() * (maxLat - minLat);
+          const { name, wgsLat: lat, wgsLng: lng } = names[i];
           const pt = new BMapGL.Point(lng, lat);
           const marker = new BMapGL.Marker(pt);
           map.addOverlay(marker);
-          const label = new BMapGL.Label(names[i], {
+          const label = new BMapGL.Label(name, {
             position: pt,
             offset: new BMapGL.Size(10, -20),
           });
